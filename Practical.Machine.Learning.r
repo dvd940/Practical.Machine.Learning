@@ -63,11 +63,14 @@ rf.out.of.sample.error <- as.numeric(1 - rf.accuracy)  # RF Out Of Sample Error
 
 
 # Random Forest Model with Cross Validation
-rf.Fit.2 <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
-saveRDS(rf.Fit.2, "rf.model.2.rds")
+# rf.Fit.2 <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
+# saveRDS(rf.Fit.2, "rf.model.2.rds")
+rfFit <- readRDS("rf.model.2.rds")
+
+
 
 # rfFit.2 <- readRDS("rf.model.2.rds")
-prediction.rf.2 <- predict(rf.Fit.2, test.data)  # Make prediction using random forest
+prediction.rf.2 <- predict(rfFit, test.data)  # Make prediction using random forest
 cf.rf.2 <- confusionMatrix(prediction.rf.2, test.data$classe)  # Determine accuracy of model
 rf.accuracy.2 <- round(cf.rf.2$overall["Accuracy"], 3)  # RF Accuracy
 rf.out.of.sample.error.2 <- as.numeric(1 - rf.accuracy.2)  # RF Out Of Sample Error
