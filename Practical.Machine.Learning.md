@@ -6,7 +6,23 @@ October 13, 2015
 
 
 # Introduction
-Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har
+In this project, the goal is to use data from accelerometers on the belt, forearm, arm, and dumbbell of 6 participants that were asked to perform barbell lifts correctly and incorrectly in 5 different ways and predict the manner in which they did the exercise. 
+
+The methods used by the participants to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl were
+
+* Exactly according to the specification (Class A)
+
+* Throwing the elbows to the front (Class B) 
+
+* Lifting the dumbbell only halfway (Class C) 
+
+* Lowering the dumbbell only halfway (Class D) 
+
+* Throwing the hips to the front (Class E).
+
+It is the class of method used that will be predicted.
+
+More information on this data set is available from the website here: http://groupware.les.inf.puc-rio.br/har
 
 # Load and Clean The Data
 **Note: ** The data is assumed to be located in a sub folder named "data".
@@ -61,13 +77,13 @@ train <- train[, keep.cols]
 
 ## Description of How Final Model Is Built
 
-1. Split the train data into train and test partitions.
+1. Slice the train data into train and test partitions.
 
-2. Run a number of models using the train partion.
+2. Run a number of models using the train partition.
 
   * Linear Discriminant Analysis (LDA) with Cross Validation.
   
-  * Random Forest.
+  * Random Forest with Cross Validation.
 
 3. For each model, use the test partition to determine the accuracy and out of sample error.
 
@@ -138,15 +154,13 @@ lda.out.of.sample.error <- as.numeric(1 - lda.accuracy)  # LDA Out Of Sample err
 
 From the confusion matrix we can see that the accuracy of this lda model is 0.698 which implies that the **out of sample error** is 0.302. 
 
-## Model 2 : Random Forest
+## Model 2 : Random Forest with Cross Validation
 
 Next a Random Forest model is tried.
 
-**Note: ** For Random Forest models, **Cross Validation** is not required.
-
 
 ```r
-rfFit <- train(classe~ .,data=train.data,method="rf",prox=TRUE
+rfFit <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"), number=3)
 ```
 
 
@@ -165,33 +179,33 @@ cf.rf
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2232    6    0    0    0
-##          B    0 1511    1    0    0
-##          C    0    1 1366    9    0
-##          D    0    0    1 1276    0
-##          E    0    0    0    1 1442
+##          A 2231    6    0    0    0
+##          B    1 1510    5    0    0
+##          C    0    2 1361   18    1
+##          D    0    0    2 1266    0
+##          E    0    0    0    2 1441
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9976          
-##                  95% CI : (0.9962, 0.9985)
+##                Accuracy : 0.9953          
+##                  95% CI : (0.9935, 0.9967)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.9969          
+##                   Kappa : 0.994           
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            1.0000   0.9954   0.9985   0.9922   1.0000
-## Specificity            0.9989   0.9998   0.9985   0.9998   0.9998
-## Pos Pred Value         0.9973   0.9993   0.9927   0.9992   0.9993
-## Neg Pred Value         1.0000   0.9989   0.9997   0.9985   1.0000
+## Sensitivity            0.9996   0.9947   0.9949   0.9844   0.9993
+## Specificity            0.9989   0.9991   0.9968   0.9997   0.9997
+## Pos Pred Value         0.9973   0.9960   0.9848   0.9984   0.9986
+## Neg Pred Value         0.9998   0.9987   0.9989   0.9970   0.9998
 ## Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
-## Detection Rate         0.2845   0.1926   0.1741   0.1626   0.1838
-## Detection Prevalence   0.2852   0.1927   0.1754   0.1628   0.1839
-## Balanced Accuracy      0.9995   0.9976   0.9985   0.9960   0.9999
+## Detection Rate         0.2843   0.1925   0.1735   0.1614   0.1837
+## Detection Prevalence   0.2851   0.1932   0.1761   0.1616   0.1839
+## Balanced Accuracy      0.9992   0.9969   0.9958   0.9921   0.9995
 ```
 
 ```r
@@ -199,7 +213,7 @@ rf.accuracy <- round(cf.rf$overall["Accuracy"], 3)  # RF Accuracy
 rf.out.of.sample.error <- as.numeric(1 - rf.accuracy)  # RF Out Of Sample Error
 ```
 
-From the confusion matrix we can see that the accuracy of this lda model is 0.998 which implies that the **out of sample error** is 0.002. 
+From the confusion matrix we can see that the accuracy of this lda model is 0.995 which implies that the **out of sample error** is 0.005. 
 
 ## Model Selection
 
@@ -213,7 +227,7 @@ To make the predictions, the original test set is loaded.
 test.raw <- read.csv("data/pml-testing.csv")
 ```
 
-This test set must be modifed to have a similar format to the training data.
+This test set must be modified to have a similar format to the training data.
 
 
 ```r

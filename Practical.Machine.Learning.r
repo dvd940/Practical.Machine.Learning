@@ -68,7 +68,6 @@ rf.out.of.sample.error <- as.numeric(1 - rf.accuracy)  # RF Out Of Sample Error
 rfFit <- readRDS("rf.model.2.rds")
 
 
-
 # rfFit.2 <- readRDS("rf.model.2.rds")
 prediction.rf.2 <- predict(rfFit, test.data)  # Make prediction using random forest
 cf.rf.2 <- confusionMatrix(prediction.rf.2, test.data$classe)  # Determine accuracy of model
