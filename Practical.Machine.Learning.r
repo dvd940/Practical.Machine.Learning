@@ -51,8 +51,8 @@ lda.out.of.sample.error <- as.numeric(1 - lda.accuracy)  # LDA Out Of Sample err
 # Random Forest Model with Cross Validation
 # This model takes a while to complete on this computer so the model is saved to an rds file
 # and read back in when needed.
-# rf.Fit.2 <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
-# saveRDS(rf.Fit.2, "rf.model.2.rds")
+# rfFit <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
+# saveRDS(rfFit, "rf.model.rds")
 rfFit <- readRDS("rf.model.rds")
 
 
