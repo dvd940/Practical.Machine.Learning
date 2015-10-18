@@ -48,31 +48,19 @@ cf.lda <- confusionMatrix(prediction.lda, test.data$classe)
 lda.accuracy <- round(cf.lda$overall["Accuracy"], 3)  # LDA Accuracy
 lda.out.of.sample.error <- as.numeric(1 - lda.accuracy)  # LDA Out Of Sample error
 
-# Random Forest Model
-
-# This model take > 4 hours to complete on this computer so the model is saved to an rds file
+# Random Forest Model with Cross Validation
+# This model takes a while to complete on this computer so the model is saved to an rds file
 # and read back in when needed.
-# modFit <- train(classe~ .,data=train.data,method="rf",prox=TRUE)  # Random Forest model
-# saveRDS(modFit, "rf.model.1.rds")  # save model to disk for future use
+# rf.Fit.2 <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
+# saveRDS(rf.Fit.2, "rf.model.2.rds")
+rfFit <- readRDS("rf.model.rds")
 
-rfFit <- readRDS("rf.model.1.rds")
+
+# rfFit.2 <- readRDS("rf.model.2.rds")
 prediction.rf <- predict(rfFit, test.data)  # Make prediction using random forest
 cf.rf <- confusionMatrix(prediction.rf, test.data$classe)  # Determine accuracy of model
 rf.accuracy <- round(cf.rf$overall["Accuracy"], 3)  # RF Accuracy
 rf.out.of.sample.error <- as.numeric(1 - rf.accuracy)  # RF Out Of Sample Error
-
-
-# Random Forest Model with Cross Validation
-# rf.Fit.2 <- train(classe~ .,data=train.data,method="rf", trControl = trainControl(method="cv"),number=3)
-# saveRDS(rf.Fit.2, "rf.model.2.rds")
-rfFit <- readRDS("rf.model.2.rds")
-
-
-# rfFit.2 <- readRDS("rf.model.2.rds")
-prediction.rf.2 <- predict(rfFit, test.data)  # Make prediction using random forest
-cf.rf.2 <- confusionMatrix(prediction.rf.2, test.data$classe)  # Determine accuracy of model
-rf.accuracy.2 <- round(cf.rf.2$overall["Accuracy"], 3)  # RF Accuracy
-rf.out.of.sample.error.2 <- as.numeric(1 - rf.accuracy.2)  # RF Out Of Sample Error
 
 
 
@@ -87,6 +75,7 @@ keep.cols[53] <- "problem_id"  # add in a problem_id column
 test <- test.raw[, keep.cols]  # Match the columns of the training set and drop the others
 
 answers <- as.character(predict(rfFit, test))  ## generate the prediction on real test data.
+answers
 #pml_write_files(answers)  # write the prediction results to files to submit to Coursera
 
 
