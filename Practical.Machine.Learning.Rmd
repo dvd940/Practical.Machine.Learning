@@ -4,7 +4,7 @@ date: "October 18, 2015"
 output: 
   html_document: 
     keep_md: yes
-    css: "main.css"
+    theme: cerulean
 ---
 
 ```{r echo = FALSE}
