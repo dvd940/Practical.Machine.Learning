@@ -1,5 +1,6 @@
 # Practical Machine Learning Project
 October 18, 2015  
+<link href="main.css" rel="stylesheet"> 
 
 
 
